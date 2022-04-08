@@ -58,7 +58,7 @@ ex:
 	$ mkdir builds/matlab_build
 ```
 
-Then locate your matlabroot file by typing `which matlab`. It should return something like matlabroot/bin/matlab
+Then locate your matlabroot directory by typing `which matlab`. It should return something like matlabroot/bin/matlab
 The following instructions assume that your matlabroot is: /shared/ucl/apps/Matlab/R2021a/full
 
 Install the matlab engine API for python in your environment by running:
@@ -91,7 +91,7 @@ For each software, cd into the directory and run:
 ```shell
 	$ chmod +x install.sh
 	$ chmod +x runit.sh
-	bash install.sh
+	$ bash install.sh
 ```
 
 ### Run a job
