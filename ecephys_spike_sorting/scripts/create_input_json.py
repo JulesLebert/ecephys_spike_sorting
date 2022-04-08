@@ -63,26 +63,26 @@ def createInputJson(output_file,
                     ):
 
     # hard coded paths to code on your computer and system
-    ecephys_directory = r'D:\ecephys_fork\ecephys_spike_sorting\ecephys_spike_sorting'
+    ecephys_directory = r'/home/skgtjml/code/ecephys_spike_sorting/ecephys_spike_sorting'
     
     # location of kilosor respository and kilosort version
 
-    kilosort_repository = r'C:\Users\labadmin\Documents\jic\KS25_release'
+    kilosort_repository = r'/home/skgtjml/code/spikesorting_tools/Kilosort'
 
-    KS2ver = '2.5'      # must equal '3.0', '2.5' or '2.0', and match the kiilosort_repository
+    KS2ver = '3.0'      # must equal '3.0', '2.5' or '2.0', and match the kiilosort_repository
     
     # KS 3.0 does not yet output pcs.
     if KS2ver == '3.0':
         include_pcs = False  # set to false for KS2ver = '3.0'
     
-    npy_matlab_repository = r'C:\Users\labadmin\Documents\jic\npy-matlab-master'
-    catGTPath = r'C:\Users\labadmin\Documents\jic\CatGT-win'
-    tPrime_path=r'C:\Users\labadmin\Documents\jic\TPrime-win'
-    cWaves_path=r'C:\Users\labadmin\Documents\jic\C_Waves-win'
+    npy_matlab_repository = r'/home/skgtjml/code/spikesorting_tools/npy-matlab'
+    catGTPath = r'/home/skgtjml/code/spikesorting_tools/CatGT-linux'
+    tPrime_path=r'/home/skgtjml/code/spikesorting_tools/TPrime-linux'
+    cWaves_path=r'/home/skgtjml/code/spikesorting_tools/C_Waves-linux'
     
      
     # for config files and kilosort working space
-    kilosort_output_tmp = r'D:\kilosort_datatemp' 
+    kilosort_output_tmp = r'/home/skgtjml/code/spikesorting_tools/kilosort_datatemp' 
     
     
     # derived directory names

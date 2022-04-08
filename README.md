@@ -12,6 +12,95 @@ https://github.com/AllenInstitute/ecephys_spike_sorting
 
 ![python versions](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7-blue.svg)
 
+## Run ecephys spike sorting on Myriad (UCL cluster)
+
+### Apply for an account on Myriad:
+To apply for an account on Myriad, see:
+https://www.rc.ucl.ac.uk/docs/Account_Services/
+
+Once you have your account, you can ssh into it by following these guidelines:
+https://www.rc.ucl.ac.uk/docs/Clusters/Myriad/
+
+I would also recommand using the [remote development tool for Visual Studio Code](#https://code.visualstudio.com/docs/remote/ssh) to edit your scripts directly in VS code. Basically, you just have to install the [Remote development](#https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) package in VS code and then remote in your myriad account through VS code.
+
+### Install ecephys spike sorting on your myriad
+
+First, load python 3.8 by running:
+```shell
+	$ module load python3/3.8
+```
+
+And matlab by running
+```shell
+	$ module load xorg-utils/X11R7.7
+	$ module load matlab/full/r2021a/9.10
+```
+
+You might want to add these two lines to your .bashrc file to you don't have to run them each time you connect to your myriad.
+
+Then, follow the guidelines under [Installation and Usage for the SpikeGLX pipeline](#installation) (install pipenv and install ecephys environment and code) using `git clone` to clone this repository
+
+ex:
+```shell
+	$ mkdir code
+	$ cd code
+	$ git clone https://github.com/JulesLebert/ecephys_spike_sorting.git
+```
+
+Important: don't forget to downgrade setuptools after activating the environment to 59.8.0 
+(If you have some trouble, I have even used setuptools 50.3.2 for some reason)
+
+### Installing matlab engine API for python in myriad
+To install matlab in myriad, first create a directory where it will be built:
+ex:
+```shell
+	$ mkdir builds
+	$ mkdir builds/matlab_build
+```
+
+Then locate your matlabroot file by typing `which matlab`. It should return something like matlabroot/bin/matlab
+The following instructions assume that your matlabroot is: /shared/ucl/apps/Matlab/R2021a/full
+
+Install the matlab engine API for python in your environment by running:
+```shell
+	$ cd /shared/ucl/apps/Matlab/R2021a/full/extern/engines/python/
+	$ python setup.py build --build-base=/home/<username>/builds/matlab_build install
+```
+You shouldn't see any error message or warning. If you do, check your version of setuptools.
+
+### Installing kilosort
+You should install [Kilosort](#https://github.com/MouseLand/Kilosort) same as usual (using git clone), except that the `mexGPUall.m` should be run in the no desktop version of matlab. To do this, run in your terminal `matlab -nodesktop`. Matlab should open in your terminal.
+
+Don't forget to also clone [npy-matlab](#https://github.com/kwikteam/npy-matlab) somewhere.
+
+### Installing CatGT, TPrime and C_Waves
+Same as usual:
+
+[CatGT](http://billkarsh.github.io/SpikeGLX/#catgt), [TPrime](http://billkarsh.github.io/SpikeGLX/#tprime), and [C_Waves](http://billkarsh.github.io/SpikeGLX/#post-processing-tools) are each available on the SpikeGLX download page. To install, simply download each zipped folder and extract to a convenient location, see the instructions [here](http://billkarsh.github.io/SpikeGLX/#command-line-tool-installation). The paths to these executables must then be set in **create_input_json.py**.
+
+
+To download something on your myriad, use the `wget` command.
+For example, for CatGT 2.5 Linux (you should check if a more recent version exists on the SpikeGLX page above):
+```shell
+	$ wget http://billkarsh.github.io/SpikeGLX/Support/CatGTLnxApp.zip
+```
+Then use the `unzip` command to unzip in the desired location.
+
+/!\ You have to give execution permission to the install.sh and runit.sh and run the install.sh script.
+For each software, cd into the directory and run:
+```shell
+	$ chmod +x install.sh
+	$ chmod +x runit.sh
+	bash install.sh
+```
+
+### Run a job
+Once everything is set up as usual, prepare your job file (see `example_spikesorting_job.sh`). Submit your job to the scheduler using:
+
+`qsub my_script.sh`
+
+For more information on submitting jobs, see https://www.rc.ucl.ac.uk/docs/Wiki_Export/Example_Submission_Scripts/
+
 
 ## Overview
 
@@ -54,6 +143,7 @@ Further documentation can be found in each module's README file. For more inform
 (Not used) [automerging](ecephys_spike_sorting/modules/automerging/README.md): Automatically merges templates that belong to the same unit (included in case it's helpful to others).
 
 ## Installation and Usage for the SpikeGLX pipeline
+<a name="installation"></a>
 
 These modules have been tested with Python 3.8.10.
 
@@ -108,9 +198,9 @@ Build the environment -- it will use the Pipfile located in this directory, and 
 
 The python version and MATLAB version need to be compatible. For Python 3.8, this requires MATLAB 2020b or later. The code has been tested only with MATLAB 2021b.
 
-Install MATLAB 2021b – side by side installations of MATLAB are fine, so there is no need to delete earlier versions, and running code specific to an earlier version should be possible.
+Install MATLAB 2021b ï¿½ side by side installations of MATLAB are fine, so there is no need to delete earlier versions, and running code specific to an earlier version should be possible.
 
-Open MATLAB 2021b, and enter the command gpuDevice(). You make get a message that there are no GPU devices with compatible drivers. Later versions of MATLAB also require more recent drivers for the GPU card – MATLAB 2021b requires version 10.1 or later of the Nvidia drivers. 
+Open MATLAB 2021b, and enter the command gpuDevice(). You make get a message that there are no GPU devices with compatible drivers. Later versions of MATLAB also require more recent drivers for the GPU card ï¿½ MATLAB 2021b requires version 10.1 or later of the Nvidia drivers. 
 
 If you get that message, quit MATLAB. Update the drivers for the GPU card -- this can be done with the Device Manager in Windows 10, and will also happen automatically if you update the CUDA Toolkit. The pipeline has been tested with CUDA Toolkit 11, which is compatible with GPUs back to the NVIDIA Maxwell architecture. After updating, restart MATLAB and enter gpuDevice() again to make sure it is recognized.
 
@@ -143,7 +233,7 @@ After completing the install, close the command window and reopen as a normal us
 
 ### Edit parameters for your system and runs
 
-Parameters are set in two files. Values that are constant across runs—like paths to code, parameters for sorting, etc – are set in **create_input_json.py**. Parameters that need to be set per run (run names, which triggers and probes to process…) are set in script files.
+Parameters are set in two files. Values that are constant across runsï¿½like paths to code, parameters for sorting, etc ï¿½ are set in **create_input_json.py**. Parameters that need to be set per run (run names, which triggers and probes to processï¿½) are set in script files.
 
 In **create_input_json.py**, be sure to set these paths and parameters for your system:
 
@@ -158,7 +248,7 @@ In **create_input_json.py**, be sure to set these paths and parameters for your 
 
 >>> Note: The kilosort_output_temp folder contains the kilosort residual file and also temporary copies of the config and master file. With kilosort 2.5, this "temporary" file--which has been drift corrected--may be used for manual curation in phy. If you want it to be kept available, set the parameter ks_copy_fproc=1; then a copy will be made with the kilosort output and the params.py adjusted automatically.
 
-Other “mostly constant” parameters in **create_input_json.py**:
+Other ï¿½mostly constantï¿½ parameters in **create_input_json.py**:
 
 - Most Kilosort2 parameters. 
 - kilosort post processing params 
