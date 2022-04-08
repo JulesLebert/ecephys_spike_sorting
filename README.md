@@ -36,7 +36,7 @@ And matlab by running
 	$ module load matlab/full/r2021a/9.10
 ```
 
-You might want to add these two lines to your .bashrc file to you don't have to run them each time you connect to your myriad.
+You might want to add these lines to your .bashrc file to you don't have to run them each time you connect to your myriad.
 
 Then, follow the guidelines under [Installation and Usage for the SpikeGLX pipeline](#installation) (install pipenv and install ecephys environment and code) using `git clone` to clone this repository
 
