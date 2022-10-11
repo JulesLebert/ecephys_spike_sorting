@@ -57,6 +57,8 @@ def createInputJson(output_file,
                     ks_CSBseed = 1,
                     ks_LTseed = 1,
                     ks_templateRadius_um = 163,
+                    ks_nblocks = 5,
+                    ks_CAR = 0,
                     c_Waves_snr_um = 160,
                     qm_isi_thresh = 1.5/1000,
                     include_pcs = True
@@ -271,7 +273,8 @@ def createInputJson(output_file,
                 "LTseed" : ks_LTseed,
                 "whiteningRange" : ks_whiteningRange,
                 "nNeighbors" : ks_nNeighbors,
-                "CAR" : 0
+                "CAR" : ks_CAR,
+                "nblocks" : ks_nblocks
             }
         },
 
